@@ -72,49 +72,58 @@ namespace TouchTransporter
                         };
                         wc.DownloadStringCompleted += async (sendere, ee) =>
                         {
-                            Infos.addLog("Searching update for files...");
-                            upd = ee.Result;
-                            SettingsReaderString srs = new SettingsReaderString(upd.Replace("\r", ""));
-                            _main.updpb.Maximum = srs.getSettings().Length - 1;
-                            _main.updpb.Value = 0;
-                            foreach (string l in srs.getSettings())
+                            try
                             {
-                                if (l == "***INFOS***") urlDl = srs.getStringSetting(l);
-                                else
+                                Infos.addLog("Searching update for files...");
+                                upd = ee.Result;
+                                SettingsReaderString srs = new SettingsReaderString(upd.Replace("\r", ""));
+                                _main.updpb.Maximum = srs.getSettings().Length - 1;
+                                _main.updpb.Value = 0;
+                                foreach (string l in srs.getSettings())
                                 {
-                                    bool b = await Task.Run(() =>
+                                    if (l == "***INFOS***") urlDl = srs.getStringSetting(l);
+                                    else
                                     {
-                                        string fold = dl + l.Replace("/", "\\");
-                                        int i = srs.getIntSetting(l);
-                                        if (i > verCode || !File.Exists(fold))
+                                        bool b = await Task.Run(() =>
                                         {
-                                            files.Add(l, i);
-                                            return true;
+                                            string fold = dl + l.Replace("/", "\\");
+                                            int i = srs.getIntSetting(l);
+                                            if (i > verCode || !File.Exists(fold))
+                                            {
+                                                files.Add(l, i);
+                                                return true;
+                                            }
+                                            else return false;
+                                        });
+                                        if (!b)
+                                        {
+                                            _main.updpb.Value++;
+                                            Infos.addLog("File " + l + " is up-to-date");
                                         }
-                                        else return false;
-                                    });
-                                    if (!b)
-                                    {
-                                        _main.updpb.Value++;
-                                        Infos.addLog("File " + l + " is up-to-date");
                                     }
                                 }
-                            }
-                            numAll = files.Keys.Count;
-                            if (numAll == 0)
-                            {
-                                _main.updl.Content = "You are up-to-date !";
-                                Infos.addLog("Up-to-date.");
-                                Storyboard sb2 = new Storyboard();
-                                sb2.Children.Add(Infos.addDoubleAnimation(_main.updg, TimeSpan.FromMilliseconds(200), 1, 0, new PropertyPath(UIElement.OpacityProperty)));
-                                sb2.Completed += (s, eee) =>
+                                numAll = files.Keys.Count;
+                                if (numAll == 0)
                                 {
-                                    _main.updg.Visibility = Visibility.Collapsed;
-                                };
-                                sb2.Begin();
+                                    _main.updl.Content = "You are up-to-date !";
+                                    Infos.addLog("Up-to-date.");
+                                    Storyboard sb2 = new Storyboard();
+                                    sb2.Children.Add(Infos.addDoubleAnimation(_main.updg, TimeSpan.FromMilliseconds(200), 1, 0, new PropertyPath(UIElement.OpacityProperty)));
+                                    sb2.Completed += (s, eee) =>
+                                    {
+                                        _main.updg.Visibility = Visibility.Collapsed;
+                                    };
+                                    sb2.Begin();
+                                }
+                                else dlFile();
+                                wc.Dispose();
                             }
-                            else dlFile();
-                            wc.Dispose();
+                            catch (Exception ei)
+                            {
+                                _main.updl.Content = "Update search error.";
+                                _main.updg.Visibility = Visibility.Collapsed;
+                                Infos.newErr(ei.InnerException, "Unable to connect to the server update.");
+                            }
                         };
                         Infos.addLog("Downloading file list update.");
                         wc.DownloadStringAsync(wb.Url);
