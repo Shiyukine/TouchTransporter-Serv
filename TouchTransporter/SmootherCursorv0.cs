@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace TouchTransporter
 {
-    public static class SmootherCursor
+    public static class SmootherCursorv0
     {
         private static List<Point> points = new List<Point>();
         public static bool enable = false;
@@ -47,7 +47,7 @@ namespace TouchTransporter
                 points.Add(np);
             }
             Infos._main.Dispatcher.Invoke(() => Infos.addLog("rm" + points.Count));
-            return new List<Point>() { np };
+            return points;
         }
 
         public static void releasePoints()
@@ -104,6 +104,11 @@ namespace TouchTransporter
             double angle = atan * (180 / Math.PI);
             if (angle < 0) angle = 360 + angle;
             return angle;
+        }
+
+        private static Point getMiddlePointOfLine(Point p1, Point p2)
+        {
+            return new Point((p1.X + p2.X) / 2, (p1.Y + p2.Y) / 2);
         }
 
         [Obsolete("This method is obsolete.", true)]

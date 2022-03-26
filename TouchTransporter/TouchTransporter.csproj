@@ -146,7 +146,10 @@
     <Compile Include="Settings\ShiyukiUtils\SettingsManager.cs" />
     <Compile Include="Settings\ShiyukiUtils\SettingsReaderString.cs" />
     <Compile Include="Settings\ShiyukiUtils\TextUtils.cs" />
-    <Compile Include="SmootherCursor.cs" />
+    <Compile Include="SmootherCursorv0.cs" />
+    <Compile Include="SmootherCursor\BezierCurve.cs" />
+    <Compile Include="SmootherCursor\SmootherCursor.cs" />
+    <Compile Include="SmootherCursor\Vector2.cs" />
     <Compile Include="Styles\Buttons.xaml.cs">
       <DependentUpon>Buttons.xaml</DependentUpon>
     </Compile>
@@ -241,5 +244,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -181,9 +181,8 @@ namespace TouchTransporter
                         double sy = System.Windows.Forms.Screen.AllScreens[isc].Bounds.Height / SystemParameters.PrimaryScreenHeight;
                         double x = System.Windows.Forms.Screen.AllScreens[isc].Bounds.X / SystemParameters.PrimaryScreenWidth * 65536;
                         double y = System.Windows.Forms.Screen.AllScreens[isc].Bounds.Y / SystemParameters.PrimaryScreenHeight * 65536;
-                        CurPos.nx = x + (CurPos.currentXPos / CurPos.maxW * 65536 * sx) /*resize if screen[isc] width != screen[0] width*/
-                    ;
-                    CurPos.ny = y + (CurPos.currentYPos / CurPos.maxH * 65536 * sy);
+                        CurPos.nx = x + (CurPos.currentXPos / CurPos.maxW * 65536 * sx) /*resize if screen[isc] width != screen[0] width*/;
+                        CurPos.ny = y + (CurPos.currentYPos / CurPos.maxH * 65536 * sy);
                         //
                         //System.Windows.Forms.Cursor.Position = new System.Drawing.Point(x + Convert.ToInt32(CurPos.nx), y + Convert.ToInt32(CurPos.ny));
                         //MouseOperations.MouseEvent(MouseOperations.MouseEventFlags.Move);
@@ -238,7 +237,7 @@ namespace TouchTransporter
                         }
                     }
                     CurPos.npress = 0;
-                    SmootherCursor.releasePoints();
+                    SmootherCursorv0.releasePoints();
                     return;
                 }
                 //mouse wheel
